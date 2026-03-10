@@ -2,6 +2,14 @@
 # define PARTICLES_H
 
 #include <unordered_map>
+#include <vector>
+#include <memory>
+
+using namespace std;
+
+
+int constexpr Width = 320;
+int constexpr Height = 180;
 
 namespace fallingsandgame {
 
@@ -16,7 +24,8 @@ enum class Element {
     STEAM,
     WATER,
     SAND,
-    FIRE
+    FIRE,
+    NONE
 };
 
 enum class Interaction {
@@ -32,7 +41,7 @@ enum class Interaction {
 class Particle {
 public:
 	Particle(int x, int y, int s, std::unordered_map<Element, Interaction> i) : pos(Coord{x, y}), speed(s), interactions(i){};
-    virtual Coord Move();
+    virtual Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
     virtual Particle InteractReplaceSelf();
     virtual void InteractDeleteSelf();
 protected:
@@ -46,7 +55,7 @@ protected:
 class Gas : public Particle {
 public:
 	Gas(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
-    Coord Move();
+    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
     Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };
@@ -54,7 +63,7 @@ public:
 class Liquid : public Particle {
 public:
 	Liquid(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
-    Coord Move();
+    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
     Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };
@@ -62,7 +71,7 @@ public:
 class Solid : public Particle {
 public:
 	Solid(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
-    Coord Move();
+    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
     Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };

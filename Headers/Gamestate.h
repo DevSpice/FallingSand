@@ -5,19 +5,22 @@
 #include <unordered_map>
 #include <vector>
 #include <memory>
+#include <raylib.h>
 using namespace std;
 
 namespace fallingsandgame {
 
-int constexpr Width = 320;
-int constexpr Height = 180;
+// using State = vector<vector<shared_ptr<Particle>>>;
 
 class GameState {
 public:
-    GameState(){};
+    GameState();
 	void Tick();
+	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
+    Element GetPixelElement(int x, int y);
 protected:
-    vector<vector<shared_ptr<Particle>>> state;
+    vector<vector<shared_ptr<Particle>>> inState;
+    vector<vector<shared_ptr<Particle>>> outState;
 };
 }
 #endif
