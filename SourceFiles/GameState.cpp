@@ -1,7 +1,6 @@
-#include "../Headers/Gamestate.h"
+#include "Gamestate.h"
 #include <unordered_map>
 #include <random>
-#include "Interactions.h"
 
 using namespace fallingsandgame;
 

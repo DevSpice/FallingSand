@@ -1,5 +1,6 @@
 #include <iostream>
-#include "SourceFiles/Gamestate.cpp"
+#include "./SourceFiles/Gamestate.cpp"
+#include "./SourceFiles/Particles.cpp"
 #include <raylib.h>
 
 using namespace std;
