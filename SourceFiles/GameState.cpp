@@ -31,15 +31,15 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};
     for (int x = scaledPos.x - 1; x <= scaledPos.x + 1; x++) {
         for (int y = scaledPos.y - 1; y <= scaledPos.y + 1; y++) {
-            auto waterPtr = make_shared<Liquid>(x, y, 1); // Water
-            outState[x][y] = make_shared<Particle>(waterPtr);
+            auto waterPtr = make_shared<Liquid>(x, y, 1, Element::WATER); // Water
+            outState[x][y] = waterPtr;
         }
     }
 }
 
 Element GameState::GetPixelElement(int x, int y) {
     if (outState[x][y] != nullptr) {
-        return Element::WATER;
+        return outState[x][y]->GetElement();
     }
     return Element::NONE;
 }
