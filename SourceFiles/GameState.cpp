@@ -32,7 +32,7 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
                 continue;
             }
             std::unique_ptr<Particle> waterPtr = std::make_unique<Liquid>(x, y, 1, 10, Element::WATER); // Water
-            (*outState)[x][y] = std::move(waterPtr); // Move ownership from in state to out state, and then 
+            (*inState)[x][y] = std::move(waterPtr); // Move ownership from in state to out state, and then 
             // when done, all particles are owned by outState.
         }
     }
