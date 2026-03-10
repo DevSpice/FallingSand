@@ -6,7 +6,7 @@
 #include <vector>
 #include <memory>
 // #include <raylib.h>
-using namespace std;
+
 
 namespace fallingsandgame {
 
@@ -19,8 +19,8 @@ public:
 	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
     Element GetPixelElement(int x, int y);
 protected:
-    vector<vector<shared_ptr<Particle>>> inState;
-    vector<vector<shared_ptr<Particle>>> outState;
+    std::vector<std::vector<std::shared_ptr<Particle>>> inState;
+    std::vector<std::vector<std::shared_ptr<Particle>>> outState;
 };
 }
 #endif

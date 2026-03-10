@@ -16,7 +16,7 @@ bool verifyIndex(int x, int y) {
     return (x >= 0 && x < Width) && (y >= 0 && y < Height);
 }
 
-Coord moveHelper(const vector<vector<shared_ptr<Particle>>>& state, Coord startingPos, int speed, int direction) {
+Coord moveHelper(const std::vector<std::vector<std::shared_ptr<Particle>>>& state, Coord startingPos, int speed, int direction) {
     // A function which calculates the best move for this particle, given
     // its speed, direction (1 : up, -1 : down), and coordinate/state information.
     auto newX = startingPos.x;
@@ -52,17 +52,17 @@ Coord moveHelper(const vector<vector<shared_ptr<Particle>>>& state, Coord starti
     return Coord{newX, newY};
 }
 
-Coord Gas::Move(const vector<vector<shared_ptr<Particle>>>& state) {
+Coord Gas::Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, -1); // (0,0) is top left, so negative speed means going up.
     return pos;
 }
 
-Coord Liquid::Move(const vector<vector<shared_ptr<Particle>>>& state) {
+Coord Liquid::Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 
-Coord Solid::Move(const vector<vector<shared_ptr<Particle>>>& state) {
+Coord Solid::Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
