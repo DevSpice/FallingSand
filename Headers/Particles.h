@@ -6,8 +6,6 @@
 #include <memory>
 #include "Interactions.h"
 
-using namespace std;
-
 
 int constexpr Width = 320;
 int constexpr Height = 180;
@@ -22,7 +20,7 @@ struct Coord {
 class Particle {
 public:
 	Particle(int x, int y, int s, int m, Element e) : pos(Coord{x, y}), speed(s), mass(m), element(e){};
-    virtual Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
+    virtual Coord Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state);
     Element GetElement();
 protected:
     Coord pos;
@@ -36,19 +34,19 @@ protected:
 class Gas : public Particle {
 public:
 	Gas(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
+    Coord Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state);
 };
 
 class Liquid : public Particle {
 public:
 	Liquid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
+    Coord Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state);
 };
 
 class Solid : public Particle {
 public:
 	Solid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const vector<vector<shared_ptr<Particle>>>& state);
+    Coord Move(const std::vector<std::vector<std::shared_ptr<Particle>>>& state);
 };
 }
 #endif

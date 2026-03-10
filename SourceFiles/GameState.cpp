@@ -1,6 +1,7 @@
 #include "../Headers/Gamestate.h"
 #include <unordered_map>
 #include <random>
+#include "Interactions.h"
 
 using namespace fallingsandgame;
 
@@ -31,7 +32,7 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};
     for (int x = scaledPos.x - 1; x <= scaledPos.x + 1; x++) {
         for (int y = scaledPos.y - 1; y <= scaledPos.y + 1; y++) {
-            auto waterPtr = make_shared<Liquid>(x, y, 1, Element::WATER); // Water
+            std::shared_ptr<Particle> waterPtr = make_shared<Liquid>(x, y, 1, 10, Element::WATER); // Water
             outState[x][y] = waterPtr;
         }
     }
