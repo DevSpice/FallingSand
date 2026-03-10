@@ -25,6 +25,6 @@ enum class Interaction {
     REPLACE,
     DESTROY
 };
-
+#endif
 
 
