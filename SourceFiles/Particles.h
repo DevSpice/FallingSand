@@ -20,7 +20,7 @@ struct Coord {
 class Particle {
 public:
 	Particle(int x, int y, int s, int m, Element e) : pos(Coord{x, y}), speed(s), mass(m), element(e){};
-    virtual Coord Move(std::vector<std::vector<std::unique_ptr<Particle>>> state) = 0;
+    virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) = 0;
     Element GetElement() {return element;};
     virtual ~Particle() = default;
 protected:

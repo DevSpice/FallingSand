@@ -14,7 +14,7 @@ void GameState::Tick() {
                 // so that other particles can know that the space is free
                 (*outState)[x][y].reset();
             }
-            auto newPos = (*inState)[x][y]->Move(inState);
+            auto newPos = (*inState)[x][y]->Move(*inState);
             (*outState)[newPos.x][newPos.y] = std::move((*inState)[x][y]);
         }
     }

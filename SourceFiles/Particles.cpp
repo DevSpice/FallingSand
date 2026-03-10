@@ -16,7 +16,7 @@ bool verifyIndex(int x, int y) {
     return (x >= 0 && x < Width) && (y >= 0 && y < Height);
 }
 
-Coord moveHelper(std::vector<std::vector<std::unique_ptr<Particle>>> state, Coord startingPos, int speed, int direction) {
+Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& state, Coord startingPos, int speed, int direction) {
     // A function which calculates the best move for this particle, given
     // its speed, direction (1 : up, -1 : down), and coordinate/state information.
     auto newX = startingPos.x;
