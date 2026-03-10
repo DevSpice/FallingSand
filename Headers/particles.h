@@ -1,48 +1,69 @@
 #ifndef PARTICLES_H
 # define PARTICLES_H
 
-namespace fallingsandgame {
+#include <unordered_map>
 
-int constexpr width = 320;
-int constexpr height = 180;
+namespace fallingsandgame {
 
 struct Coord {
     int x;
     int y;
 };
 
+enum class Element {
+    // enums representing each element, because I couldn't find a way to actully store
+    // types in something.
+    STEAM,
+    WATER,
+    SAND,
+    FIRE
+};
+
+enum class Interaction {
+    // Defines the interaction which this element has upon being near another element
+    
+    // E.g., for water, its FIRE interaction is REPLACE with STEAM, because the water
+    // itself will handle that. But for fire, its WATER interaction is DESTROY, since
+    // the water extinguishes the fire, so the fire itself will handle that.
+    REPLACE,
+    DESTROY
+};
+
 class Particle {
 public:
-	Particle(int x, int y, int s) : pos(Coord{x, y}), speed(s){};
+	Particle(int x, int y, int s, std::unordered_map<Element, Interaction> i) : pos(Coord{x, y}), speed(s), interactions(i){};
     virtual Coord Move();
-    virtual void InteractReplaceSelf(Particle other);
+    virtual Particle InteractReplaceSelf();
     virtual void InteractDeleteSelf();
-private:
+protected:
     Coord pos;
     int speed;
+    std::unordered_map<Element, Interaction> interactions;
 };
+
+// A lot of repeated code, just for them to only differ in Move. Is there a better way?
 
 class Gas : public Particle {
 public:
-	Gas(int x, int y, int s) : Particle(x, y, s){};
+	Gas(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
     Coord Move();
-    void InteractReplaceSelf(Particle other);
+    Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };
 
 class Liquid : public Particle {
 public:
-	Liquid(int x, int y, int s) : Particle(x, y, s){};
+	Liquid(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
     Coord Move();
-    void InteractReplaceSelf(Particle other);
+    Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };
 
 class Solid : public Particle {
 public:
-	Solid(int x, int y, int s) : Particle(x, y, s){};
+	Solid(int x, int y, int s, std::unordered_map<Element, Interaction> i) : Particle(x, y, s, i){};
     Coord Move();
-    void InteractReplaceSelf(Particle other);
+    Particle InteractReplaceSelf();
     void InteractDeleteSelf();
 };
 }
