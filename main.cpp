@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./SourceFiles/Gamestate.cpp"
+#include "SourceFiles/Gamestate.cpp"
 #include <raylib.h>
 
 using namespace std;
