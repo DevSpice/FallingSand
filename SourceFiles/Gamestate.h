@@ -10,17 +10,20 @@
 
 namespace fallingsandgame {
 
-// using State = vector<vector<shared_ptr<Particle>>>;
+// using State = std::vector<std::vector<std::unique_ptr<Particle>>>;
 
 class GameState {
 public:
-    GameState();
+    GameState(){};
 	void Tick();
 	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
     Element GetPixelElement(int x, int y);
 protected:
-    std::vector<std::vector<std::shared_ptr<Particle>>> inState;
-    std::vector<std::vector<std::shared_ptr<Particle>>> outState;
+    std::shared_ptr<std::vector<std::vector<std::unique_ptr<Particle>>>> inState; // When move instate to outstate, first do that for every pixel.
+    // But sometimes, you have a unique_ptr owning an object, and you wanna clear it so
+    // it's not owning an object anymore. The reset method does that. E.g. if its outState wants to
+    // move off the screen.
+    std::shared_ptr<std::vector<std::vector<std::unique_ptr<Particle>>>> outState;
 };
 }
 #endif
