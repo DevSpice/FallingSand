@@ -52,17 +52,17 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& stat
     return Coord{newX, newY};
 }
 
-Coord Gas::Move(std::vector<std::vector<std::unique_ptr<Particle>>> state) {
+Coord Gas::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, -1); // (0,0) is top left, so negative speed means going up.
     return pos;
 }
 
-Coord Liquid::Move(std::vector<std::vector<std::unique_ptr<Particle>>> state) {
+Coord Liquid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 
-Coord Solid::Move(std::vector<std::vector<std::unique_ptr<Particle>>> state) {
+Coord Solid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
     return pos;
 }

@@ -14,7 +14,15 @@ namespace fallingsandgame {
 
 class GameState {
 public:
-    GameState(){};
+    GameState(){
+        inState = std::make_shared<std::vector<std::vector<std::unique_ptr<Particle>>>>(Width);
+        outState = std::make_shared<std::vector<std::vector<std::unique_ptr<Particle>>>>(Width);
+
+        for (int x = 0; x < Width; x++) {
+            (*inState)[x].resize(Height);
+            (*outState)[x].resize(Height);
+        }
+    };
 	void Tick();
 	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
     Element GetPixelElement(int x, int y);

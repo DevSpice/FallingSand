@@ -20,7 +20,7 @@ struct Coord {
 class Particle {
 public:
 	Particle(int x, int y, int s, int m, Element e) : pos(Coord{x, y}), speed(s), mass(m), element(e){};
-    virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) = 0;
+    virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state){return Coord{0,0};};
     Element GetElement() {return element;};
     virtual ~Particle() = default;
 protected:
@@ -35,19 +35,19 @@ protected:
 class Gas : public Particle {
 public:
 	Gas(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(std::vector<std::vector<std::unique_ptr<Particle>>> state);
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
 };
 
 class Liquid : public Particle {
 public:
 	Liquid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(std::vector<std::vector<std::unique_ptr<Particle>>> state);
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
 };
 
 class Solid : public Particle {
 public:
 	Solid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(std::vector<std::vector<std::unique_ptr<Particle>>> state);
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
 };
 }
 #endif
