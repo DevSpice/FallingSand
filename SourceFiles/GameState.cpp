@@ -31,7 +31,7 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};
     for (int x = scaledPos.x - 1; x <= scaledPos.x + 1; x++) {
         for (int y = scaledPos.y - 1; y <= scaledPos.y + 1; y++) {
-            auto waterPtr = make_shared<Water>(x, y, 1);
+            auto waterPtr = make_shared<Liquid>(x, y, 1); // Water
             outState[x][y] = make_shared<Particle>(waterPtr);
         }
     }
