@@ -23,29 +23,29 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
     auto newY = startingPos.y;
     while (speed >= 1)
     {
-        int leftOrRight = distrib(rng) % 2 == 1 ? -1 : 1;
-        // Check if can move straight up/down.
-        if (!VerifyIndexHelper(newX, newY+direction) || checkStates(newX, newY+direction, inState, outState)) {
-            newY = newY+direction;
-        }
-        // Check if can move up/down and to the left or right.
-        else if (!VerifyIndexHelper(newX-leftOrRight, newY+direction) || checkStates(newX-leftOrRight, newY+direction, inState, outState)) {
-            newX = newX-leftOrRight;
-            newY = newY+direction;
-        }
-        else if (!VerifyIndexHelper(newX+leftOrRight, newY+direction) || checkStates(newX+leftOrRight, newY+direction, inState, outState)) {
-            newX = newX+leftOrRight;
-            newY = newY+direction;
-        }
-        // Check if can move to the left or right.
-        else if (!VerifyIndexHelper(newX-leftOrRight, newY) || checkStates(newX-leftOrRight, newY, inState, outState)) {
-            newX = newX-leftOrRight;
-        }
-        else if (!VerifyIndexHelper(newX+leftOrRight, newY) || checkStates(newX+leftOrRight, newY, inState, outState)) {
-            newX = newX+leftOrRight;
+        auto leftOrRight = distrib(rng) % 2 == 1 ? -1 : 1;
+        auto yMod = direction; // Gets -1 or 1
+        while (yMod != direction*-1) { // While yMod == yMod or yMod == 0
+            // Check down/up middle, down/up left, and down/up right, and then just left and right
+            if (yMod != 0 && !VerifyIndexHelper(newX, newY+yMod) || checkStates(newX, newY+yMod, inState, outState)) {
+                newY = newY+yMod;
+                break;
+            }
+            // Check if can move up/down and to the left or right.
+            else if (!VerifyIndexHelper(newX-leftOrRight, newY+yMod) || checkStates(newX-leftOrRight, newY+yMod, inState, outState)) {
+                newX = newX-leftOrRight;
+                newY = newY+direction;
+                break;
+            }
+            else if (!VerifyIndexHelper(newX+leftOrRight, newY+yMod) || checkStates(newX+leftOrRight, newY+yMod, inState, outState)) {
+                newX = newX+leftOrRight;
+                newY = newY+direction;
+                break;
+            }
+            yMod += direction*-1;
         }
         // Otherwise, is trapped, so stay still and exit movement loop.
-        else {
+        if (newX == startingPos.x && newY == startingPos.y) {
             break;
         }
         speed--;
