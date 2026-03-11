@@ -29,7 +29,7 @@ int main () {
     bool interacted = false;
     Coord interactPos;
     Element userElement = Element::WATER;
-    GameState gs = GameState(8);
+    GameState gs = GameState(4);
     while (WindowShouldClose() == false){
         interacted = false;
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {

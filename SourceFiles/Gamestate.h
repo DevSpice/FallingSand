@@ -25,9 +25,10 @@ public:
         }
         
         numThreads = thrCount;
+        iter = 0;
     };
 	void Tick();
-	void TickParallel(int groupNum, int threads);
+	void TickParallel(int groupNum, int threads, int rNum);
 	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
     Element GetPixelElement(int x, int y);
 private:
@@ -38,6 +39,7 @@ private:
     std::shared_ptr<std::vector<std::vector<std::unique_ptr<Particle>>>> outState;
     std::vector<std::thread> workers;
     int numThreads;
+    int iter;
 };
 }
 #endif

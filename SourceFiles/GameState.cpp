@@ -11,28 +11,30 @@ void GameState::Tick() {
             (*outState)[x][y].reset();
         }
     }
+    //auto rNum = distrib1(rng1);
     std::vector<std::thread> evenThreadsVec;
     for (int i = 0; i < numThreads; i += 2) {
-        evenThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads));
+        evenThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads, iter));
     }
     for (auto &t : evenThreadsVec) {
         t.join();
     }
     std::vector<std::thread> oddThreadsVec;
     for (int i = 1; i < numThreads; i += 2) {
-        oddThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads));
+        oddThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads, iter));
     }
     for (auto &t : oddThreadsVec) {
         t.join();
     }
+    iter = (iter + 1) % 10;
     std::swap(inState, outState);
 };
 
-void GameState::TickParallel(int groupNum, int threads) {
-    auto startY = groupNum*(Height/threads);
-    auto endY = groupNum == threads-1 ? Height-1 : (groupNum+1)*(Height/threads)-1;
-    for(int y = endY; y >= startY; y--) { // Goes from Height-1 to 0, AKA bottom to top
-        for(int x = Width-1; x >= 0; x--) { // Goes from Width-1 to 0, AKA left to right
+void GameState::TickParallel(int groupNum, int threads, int rNum) {
+    auto startX = groupNum == 0 ? 0 : groupNum*(Width/threads)+rNum;
+    auto endX = groupNum == threads-1 ? Width-1 : (groupNum+1)*(Width/threads)-1+rNum;
+    for(int y = Height-1; y >= 0; y--) { // Goes from Height-1 to 0, AKA bottom to top
+        for(int x = endX; x >= startX; x--) { // Goes from Width-1 to 0, AKA left to right
             if((*inState)[x][y]) { // unique_ptr is true if it's managing an object, ad false otherwise
                 // nullptr is only for raw ptrs.
 
