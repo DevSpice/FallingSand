@@ -7,7 +7,7 @@ using namespace fallingsandgame;
 
 std::random_device rd;  // a seed source for the random number engine
 std::mt19937 rng(rd()); // mersenne_twister_engine seeded with rd()
-std::uniform_int_distribution<> distrib(1, 20);
+std::uniform_int_distribution<> distrib(1, 100);
 
 bool checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
@@ -23,33 +23,32 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
     auto newY = startingPos.y;
     while (speed >= 1)
     {
+        auto currX = newX;
+        auto currY = newY;
         int leftOrRight = distrib(rng) % 2 == 1 ? -1 : 1; // -1 or +1, to add to x-coordinate to move left or right at random.
-        // Check if can move straight up/down.
-        if (!VerifyIndexHelper(newX, newY+direction) || checkStates(newX, newY+direction, inState, outState)) {
-            newY = newY+direction;
+        std::vector<int> possXs{newX, newX-leftOrRight, newX+leftOrRight};
+        std::vector<int> possYs{newY+direction};
+        if (fluid) {
+            possYs.push_back(newY);
         }
-        // Check if can move up/down and to the left or right.
-        else if (!VerifyIndexHelper(newX-leftOrRight, newY+direction) || checkStates(newX-leftOrRight, newY+direction, inState, outState)) {
-            newX = newX-leftOrRight;
-            newY = newY+direction;
-        }
-        else if (!VerifyIndexHelper(newX+leftOrRight, newY+direction) || checkStates(newX+leftOrRight, newY+direction, inState, outState)) {
-            newX = newX+leftOrRight;
-            newY = newY+direction;
-        }
-        else if (fluid) {
-            // Check if can move to the left or right.
-            if (!VerifyIndexHelper(newX-leftOrRight, newY) || checkStates(newX-leftOrRight, newY, inState, outState)) {
-                newX = newX-leftOrRight;
+        for (auto x : possXs) { // Check in order: Stay at same x, Move Left/Right, and Move (-) Left/Right
+            for (auto y : possYs) // Check in order: Move Up/Down, and (if fluid) Stay at same y
+            {
+                if ((x != newX || y != newY) && (!VerifyIndexHelper(x, y) || checkStates(x, y, inState, outState))) {
+                    currX = x;
+                    currY = y;
+                    break;
+                }
             }
-            else if (!VerifyIndexHelper(newX+leftOrRight, newY) || checkStates(newX+leftOrRight, newY, inState, outState)) {
-                newX = newX+leftOrRight;
+            if (currX != newX || currY != newY) { // If we've gotten a successful move, we can break this current loop
+                break;
             }
         }
-        // Otherwise, is trapped, so stay still and exit movement loop.
-        else {
+        if (currX == newX && currY == newY) { // If didn't move, is trapped, so stay still and exit movement loop.
             break;
         }
+        newX = currX;
+        newY = currY;
         speed--;
     }
     return Coord{newX, newY};
