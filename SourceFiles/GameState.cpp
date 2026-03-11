@@ -1,6 +1,7 @@
 #include "Gamestate.h"
 #include <unordered_map>
 #include <random>
+#include <thread>
 
 using namespace fallingsandgame;
 
@@ -10,7 +11,27 @@ void GameState::Tick() {
             (*outState)[x][y].reset();
         }
     }
-    for(int y = Height-1; y >= 0; y--) { // Goes from Height-1 to 0, AKA bottom to top
+    std::vector<std::thread> evenThreadsVec;
+    for (int i = 0; i < numThreads; i += 2) {
+        evenThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads));
+    }
+    for (auto &t : evenThreadsVec) {
+        t.join();
+    }
+    std::vector<std::thread> oddThreadsVec;
+    for (int i = 1; i < numThreads; i += 2) {
+        oddThreadsVec.push_back(std::thread(&GameState::TickParallel, this, i, numThreads));
+    }
+    for (auto &t : oddThreadsVec) {
+        t.join();
+    }
+    std::swap(inState, outState);
+};
+
+void GameState::TickParallel(int groupNum, int threads) {
+    auto startY = groupNum*(Height/threads);
+    auto endY = groupNum == threads-1 ? Height-1 : (groupNum+1)*(Height/threads)-1;
+    for(int y = endY; y >= startY; y--) { // Goes from Height-1 to 0, AKA bottom to top
         for(int x = Width-1; x >= 0; x--) { // Goes from Width-1 to 0, AKA left to right
             if((*inState)[x][y]) { // unique_ptr is true if it's managing an object, ad false otherwise
                 // nullptr is only for raw ptrs.
@@ -24,8 +45,7 @@ void GameState::Tick() {
             }
         }
     }
-    std::swap(inState, outState);
-};
+}
 
 void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn) {
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};

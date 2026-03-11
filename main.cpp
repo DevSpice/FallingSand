@@ -14,8 +14,6 @@ int main () {
     
     unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)}, {Element::STEAM, Color(LIGHTGRAY)}, {Element::NONE, Color(BLACK)}};
 
-    GameState game{};
-
     cout << "Hello World" << endl;
 
     auto displayWidth = Width*SCALE_FACTOR;
@@ -29,7 +27,7 @@ int main () {
     bool interacted = false;
     Coord interactPos;
     Element userElement = Element::WATER;
-    GameState gs = GameState();
+    GameState gs = GameState(8);
     while (WindowShouldClose() == false){
         interacted = false;
         if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
