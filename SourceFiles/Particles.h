@@ -50,9 +50,15 @@ public:
     Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
 };
 
-class Solid : public Particle {
+class MobileSolid : public Particle {
 public:
-	Solid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
+	MobileSolid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
+};
+
+class ImmobileSolid : public Particle {
+public:
+	ImmobileSolid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
     Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
 };
 }

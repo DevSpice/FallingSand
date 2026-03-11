@@ -37,8 +37,22 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
             if(x < 0 || x > Width-1 || y < 0 || y > Height-1) {
                 continue;
             }
-            std::unique_ptr<Particle> waterPtr = std::make_unique<Liquid>(x, y, 1, 10, Element::WATER); // Water
-            (*inState)[x][y] = std::move(waterPtr); // Move ownership from in state to out state, and then 
+            std::unique_ptr<Particle> newPtr;
+            switch (elemToSpawn) {
+                case Element::WATER:
+                    newPtr = std::make_unique<Liquid>(x, y, 1, 10, Element::WATER); // Water
+                    break;
+                case Element::CONCRETE:
+                    newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 100, Element::CONCRETE); // Concrete
+                    break;
+                case Element::STEAM:
+                    newPtr = std::make_unique<Gas>(x, y, 1, 5, Element::STEAM); // Steam
+                    break;
+                default:
+                    newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 0, Element::NONE); // Eraser, essentially
+            }
+             
+            (*inState)[x][y] = std::move(newPtr); // Move ownership from in state to out state, and then 
             // when done, all particles are owned by outState.
         }
     }

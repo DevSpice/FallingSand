@@ -12,7 +12,7 @@ int main () {
     const int SCREEN_HEIGHT = Height;
     const int SCALE_FACTOR = 4;
     
-    unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::NONE, Color(BLACK)}};
+    unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)}, {Element::STEAM, Color(LIGHTGRAY)}, {Element::NONE, Color(BLACK)}};
 
     GameState game{};
 
@@ -36,6 +36,20 @@ int main () {
             interacted = true;
             auto interactVec = GetMousePosition();
             interactPos = Coord{int(interactVec.x), int(interactVec.y)};
+        }
+
+        // Calculate which element they are placing.
+        if (IsKeyPressed(KEY_ONE)) {
+            userElement = Element::NONE;
+        }
+        else if (IsKeyPressed(KEY_TWO)) {
+            userElement = Element::CONCRETE;
+        }
+        else if (IsKeyPressed(KEY_THREE)) {
+            userElement = Element::WATER;
+        }
+        else if (IsKeyPressed(KEY_FOUR)) {
+            userElement = Element::STEAM;
         }
 
         if (interacted) {

@@ -13,6 +13,7 @@ enum class Element {
     WATER,
     SAND,
     FIRE,
+    CONCRETE,
     NONE
 };
 

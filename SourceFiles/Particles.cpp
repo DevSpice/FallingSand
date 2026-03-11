@@ -55,7 +55,12 @@ Coord Liquid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& st
     return pos;
 }
 
-Coord Solid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
+Coord MobileSolid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
     pos = moveHelper(state, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
+    return pos;
+}
+
+Coord ImmobileSolid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) {
+    // It should not move at all, so just return its current position.
     return pos;
 }
