@@ -20,7 +20,7 @@ int main () {
 
     auto displayWidth = Width*SCALE_FACTOR;
     auto displayHeight = Height*SCALE_FACTOR;
-    InitWindow(displayWidth, displayHeight, "My first RAYLIB program!"); // Top left is (0,0)
+    InitWindow(displayWidth, displayHeight, "Falling Sands! A C++ Final Project by Houle & Klaes"); // Top left is (0,0)
     SetTargetFPS(60);
     // According to Google, we can use a render texture to draw pixel by pixel, then size it up
     // to a larger size afterwards so that we can 
