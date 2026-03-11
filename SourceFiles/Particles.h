@@ -26,7 +26,8 @@ struct Coord {
 class Particle {
 public:
 	Particle(int x, int y, int s, int m, Element e) : pos(Coord{x, y}), speed(s), mass(m), element(e){};
-    virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state){return Coord{0,0};};
+    virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState){return Coord{0,0};};
     Element GetElement() {return element;};
     virtual ~Particle() = default;
 protected:
@@ -41,25 +42,29 @@ protected:
 class Gas : public Particle {
 public:
 	Gas(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) override;
 };
 
 class Liquid : public Particle {
 public:
 	Liquid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) override;
 };
 
 class MobileSolid : public Particle {
 public:
 	MobileSolid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) override;
 };
 
 class ImmobileSolid : public Particle {
 public:
 	ImmobileSolid(int x, int y, int s, int m, Element e) : Particle(x, y, s, m, e){};
-    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& state) override;
+    Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) override;
 };
 }
 #endif
