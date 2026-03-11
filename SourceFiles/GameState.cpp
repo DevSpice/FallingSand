@@ -13,7 +13,13 @@ void GameState::Tick() {
                 // If this space is blank in inState, we want it blank in outState,
                 // so that other particles can know that the space is free
                 auto newPos = (*inState)[x][y]->Move(*inState);
-                (*outState)[newPos.x][newPos.y] = std::move((*inState)[x][y]);
+                if (!VerifyIndexHelper(newPos.x, newPos.y)) {
+                    (*inState)[x][y].reset();
+                    (*outState)[x][y].reset();
+                }
+                else {
+                    (*outState)[newPos.x][newPos.y] = std::move((*inState)[x][y]);
+                }
             }
             else {
                 (*inState)[x][y].reset();

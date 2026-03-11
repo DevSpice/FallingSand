@@ -9,13 +9,6 @@ std::random_device rd;  // a seed source for the random number engine
 std::mt19937 rng(rd()); // mersenne_twister_engine seeded with rd()
 std::uniform_int_distribution<> distrib(-1, 1);
 
-bool verifyIndex(int x, int y) {
-    // Doesn't let our pixels move off the board, essentially making the bounds
-    // of our screen like a wall. This will be good for showing how our elements
-    // move upon piling up.
-    return (x >= 0 && x < Width) && (y >= 0 && y < Height);
-}
-
 Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& state, Coord startingPos, int speed, int direction) {
     // A function which calculates the best move for this particle, given
     // its speed, direction (1 : up, -1 : down), and coordinate/state information.
@@ -24,23 +17,23 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& stat
     while (speed >= 1)
     {
         // Check if can move straight up/down.
-        if (verifyIndex(newX, newY+direction) && state[newX][newY+direction] == nullptr) {
+        if (!VerifyIndexHelper(newX, newY+direction) || !state[newX][newY+direction]) {
             newY = newY+direction;
         }
-        // Check if can move up to the left or right.
-        else if (verifyIndex(newX-1, newY+direction) && state[newX-1][newY+direction] == nullptr) {
+        // Check if can move up/down and to the left or right.
+        else if (!VerifyIndexHelper(newX-1, newY+direction) || !state[newX-1][newY+direction]) {
             newX = newX-1;
             newY = newY+direction;
         }
-        else if (verifyIndex(newX+1, newY+direction) && state[newX+1][newY+direction] == nullptr) {
+        else if (!VerifyIndexHelper(newX+1, newY+direction) || !state[newX+1][newY+direction]) {
             newX = newX+1;
             newY = newY+direction;
         }
         // Check if can move to the left or right.
-        else if (verifyIndex(newX-1, newY) && state[newX-1][newY] == nullptr) {
+        else if (!VerifyIndexHelper(newX-1, newY) || !state[newX-1][newY]) {
             newX = newX-1;
         }
-        else if (verifyIndex(newX+1, newY) && state[newX+1][newY] == nullptr) {
+        else if (!VerifyIndexHelper(newX+1, newY) || !state[newX+1][newY]) {
             newX = newX+1;
         }
         // Otherwise, is trapped, so stay still and exit movement loop.

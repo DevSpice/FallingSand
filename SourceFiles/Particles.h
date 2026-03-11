@@ -12,6 +12,12 @@ int constexpr Height = 180;
 
 namespace fallingsandgame {
 
+bool VerifyIndexHelper(int x, int y) {
+    // Doesn't let our pixels move off the board, essentially making the bounds
+    // of our screen delete anything that tries to move past them.
+    return (x >= 0 && x < Width) && (y >= 0 && y < Height);
+}
+
 struct Coord {
     int x;
     int y;
