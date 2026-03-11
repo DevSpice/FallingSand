@@ -32,12 +32,6 @@ void GameState::Tick() {
     std::swap(inState, outState);
 };
 
-struct Element {
-    ElementName type;
-    int speed;
-    int mass;
-};
-
 std::unordered_map<ElementName, Element> elems {};
                                             
 void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, ElementName elemToSpawn) {
