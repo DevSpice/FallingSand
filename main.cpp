@@ -107,7 +107,7 @@ Element DrawToolbar(int screenW, int screenH, Element current) {
                  swatchY + BTN_SWATCH_SIZE + 16,
                  keyFontSize, keyColor);
 
-        // ── Click detection (only the game area passes mouse to game; toolbar captures it) ──
+        // Click detection (only the game area passes mouse to game; toolbar captures it)
         if (isHovered && IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
             chosen = ELEMENTS[i].elem;
         }
