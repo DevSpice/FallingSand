@@ -20,7 +20,9 @@ static const Color  TEXT_BRIGHT     = { 230, 230, 240, 255 };
 
 unordered_map<ElementName, Color> colorsDict = {{ElementName::WATER, Color(BLUE)}, {ElementName::CONCRETE, Color(GRAY)},
                                             {ElementName::STEAM, Color(LIGHTGRAY)}, {ElementName::FIRE, Color(ORANGE)},
-                                            {ElementName::SAND, Color(BEIGE)}, {ElementName::NONE, Color(BLACK)}};
+                                            {ElementName::SAND, Color(BEIGE)}, {ElementName::NONE, Color(BLACK)},
+                                            {ElementName::ERASE, Color(BLACK)}
+                                        };
 
 struct ElementInfo {
     ElementName   elem;
@@ -30,12 +32,12 @@ struct ElementInfo {
 };
 
 static const ElementInfo ELEMENTS[BTN_COUNT] = {
-    { ElementName::NONE,     "Erase",    "1", BLACK          },
+    { ElementName::ERASE,    "Erase",    "1", BLACK          },
     { ElementName::CONCRETE, "Concrete", "2", GRAY           },
     { ElementName::WATER,    "Water",    "3", BLUE           },
     { ElementName::STEAM,    "Steam",    "4", LIGHTGRAY      },
     { ElementName::FIRE,     "Fire",     "5", ORANGE         },
-    { ElementName::SAND,     "Sand",     "6", BEIGE          },
+    { ElementName::SAND,     "Sand",     "6", BEIGE          }
 };
 
 

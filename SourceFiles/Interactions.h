@@ -14,7 +14,8 @@ enum class ElementName {
     SAND,
     FIRE,
     CONCRETE,
-    NONE
+    NONE,
+    ERASE
 };
 
 enum class Interaction {

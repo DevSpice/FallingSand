@@ -37,7 +37,10 @@ std::unordered_map<ElementName, Element> elems {
     {ElementName::CONCRETE, Element{ElementName::CONCRETE, 1, 1}},
     {ElementName::STEAM, Element{ElementName::STEAM, 1, 1}},
     {ElementName::FIRE, Element{ElementName::FIRE, 1, 1}},
-    {ElementName::SAND, Element{ElementName::SAND, 1, 1}}
+    {ElementName::SAND, Element{ElementName::SAND, 1, 1}},
+    {ElementName::ERASE, Element{ElementName::ERASE, 0, 0}}
+
+
 };
                                             
 void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, ElementName elemToSpawn) {
@@ -64,6 +67,8 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
                 case ElementName::SAND:
                     newPtr = std::make_unique<MobileSolid>(x, y, elems[elemToSpawn]); // Sand
                     break;
+                case ElementName::ERASE:
+                    newPtr = std::make_unique<MobileSolid>(x, y, elems[elemToSpawn]);
                 default:
                     newPtr = std::make_unique<ImmobileSolid>(x, y, elems[ElementName::NONE]); // Eraser, essentially
             }
