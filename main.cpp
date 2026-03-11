@@ -12,7 +12,9 @@ int main () {
     const int SCREEN_HEIGHT = Height;
     const int SCALE_FACTOR = 4;
     
-    unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)}, {Element::STEAM, Color(LIGHTGRAY)}, {Element::NONE, Color(BLACK)}};
+    unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)},
+                                                {Element::STEAM, Color(LIGHTGRAY)}, {Element::FIRE, Color(ORANGE)},
+                                                {Element::SAND, Color(BEIGE)}, {Element::NONE, Color(BLACK)}};
 
     cout << "Hello World" << endl;
 
@@ -48,6 +50,12 @@ int main () {
         }
         else if (IsKeyPressed(KEY_FOUR)) {
             userElement = Element::STEAM;
+        }
+        else if (IsKeyPressed(KEY_FIVE)) {
+            userElement = Element::FIRE;
+        }
+        else if (IsKeyPressed(KEY_SIX)) {
+            userElement = Element::SAND;
         }
 
         if (interacted) {
