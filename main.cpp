@@ -18,20 +18,24 @@ static const Color  TEXT_DIM        = { 140, 140, 155, 255 };
 static const Color  TEXT_BRIGHT     = { 230, 230, 240, 255 };
 
 
+unordered_map<ElementName, Color> colorsDict = {{ElementName::WATER, Color(BLUE)}, {ElementName::CONCRETE, Color(GRAY)},
+                                            {ElementName::STEAM, Color(LIGHTGRAY)}, {ElementName::FIRE, Color(ORANGE)},
+                                            {ElementName::SAND, Color(BEIGE)}, {ElementName::NONE, Color(BLACK)}};
+
 struct ElementInfo {
-    Element   elem;
+    ElementName   elem;
     const char* label;
     const char* key;
     Color     swatch;
 };
 
 static const ElementInfo ELEMENTS[BTN_COUNT] = {
-    { Element::NONE,     "Erase",    "1", BLACK          },
-    { Element::CONCRETE, "Concrete", "2", GRAY           },
-    { Element::WATER,    "Water",    "3", BLUE           },
-    { Element::STEAM,    "Steam",    "4", LIGHTGRAY      },
-    { Element::FIRE,     "Fire",     "5", ORANGE         },
-    { Element::SAND,     "Sand",     "6", BEIGE          },
+    { ElementName::NONE,     "Erase",    "1", BLACK          },
+    { ElementName::CONCRETE, "Concrete", "2", GRAY           },
+    { ElementName::WATER,    "Water",    "3", BLUE           },
+    { ElementName::STEAM,    "Steam",    "4", LIGHTGRAY      },
+    { ElementName::FIRE,     "Fire",     "5", ORANGE         },
+    { ElementName::SAND,     "Sand",     "6", BEIGE          },
 };
 
 
@@ -39,8 +43,8 @@ static const ElementInfo ELEMENTS[BTN_COUNT] = {
 //  Renders the bottom element-picker panel and
 //  returns the Element the user clicked (or
 //  current if no click occurred).
-Element DrawToolbar(int screenW, int screenH, Element current) {
-    Element chosen = current;
+ElementName DrawToolbar(int screenW, int screenH, ElementName current) {
+    ElementName chosen = current;
 
     // Panel background
     DrawRectangle(0, screenH - TOOLBAR_HEIGHT, screenW, TOOLBAR_HEIGHT, TOOLBAR_BG);
@@ -77,7 +81,7 @@ Element DrawToolbar(int screenW, int screenH, Element current) {
         int swatchY = btnY + 6;
 
         // Special "Erase" swatch: draw a small X instead of solid black
-        if (ELEMENTS[i].elem == Element::NONE) {
+        if (ELEMENTS[i].elem == ElementName::NONE) {
             DrawRectangle(swatchX, swatchY, BTN_SWATCH_SIZE, BTN_SWATCH_SIZE, { 50, 50, 58, 255 });
             // Draw cross
             DrawLine(swatchX + 3, swatchY + 3,
@@ -121,12 +125,6 @@ int main () {
     const int SCREEN_WIDTH = Width;
     const int SCREEN_HEIGHT = Height;
     const int SCALE_FACTOR = 4;
-    
-    unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)},
-                                                {Element::STEAM, Color(LIGHTGRAY)}, {Element::FIRE, Color(ORANGE)},
-                                                {Element::SAND, Color(BEIGE)}, {Element::NONE, Color(BLACK)}};
-
-    GameState game{};
 
     cout << "Hello World" << endl;
 
@@ -140,7 +138,7 @@ int main () {
     // Set up user interaction variables;
     bool interacted = false;
     Coord interactPos;
-    Element userElement = Element::WATER;
+    ElementName userElement = ElementName::WATER;
     GameState gs = GameState();
     while (WindowShouldClose() == false){
         interacted = false;
@@ -152,22 +150,22 @@ int main () {
 
         // Calculate which element they are placing.
         if (IsKeyPressed(KEY_ONE)) {
-            userElement = Element::NONE;
+            userElement = ElementName::NONE;
         }
         else if (IsKeyPressed(KEY_TWO)) {
-            userElement = Element::CONCRETE;
+            userElement = ElementName::CONCRETE;
         }
         else if (IsKeyPressed(KEY_THREE)) {
-            userElement = Element::WATER;
+            userElement = ElementName::WATER;
         }
         else if (IsKeyPressed(KEY_FOUR)) {
-            userElement = Element::STEAM;
+            userElement = ElementName::STEAM;
         }
         else if (IsKeyPressed(KEY_FIVE)) {
-            userElement = Element::FIRE;
+            userElement = ElementName::FIRE;
         }
         else if (IsKeyPressed(KEY_SIX)) {
-            userElement = Element::SAND;
+            userElement = ElementName::SAND;
         }
 
         if (interacted) {
@@ -181,7 +179,7 @@ int main () {
             ClearBackground(BLACK);
             for (int x = 0; x < pixelatedScreen.texture.width; x++) {
                 for (int y = 0; y < pixelatedScreen.texture.height; y++) {
-                    auto elemToDraw = gs.GetPixelElement(x, y);
+                    auto elemToDraw = gs.GetPixelElementName(x, y);
                     DrawPixel(x, y, colorsDict[elemToDraw]);
                 }
             }

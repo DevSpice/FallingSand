@@ -16,7 +16,7 @@ void GameState::Tick() {
                 // nullptr is only for raw ptrs.
 
                 // If NONE material, we just want it to be empty when we get to outState
-                if ((*inState)[x][y]->GetElement() == Element::NONE) {
+                if ((*inState)[x][y]->GetElement() == ElementName::NONE) {
                     continue;
                 }
                 
@@ -32,7 +32,15 @@ void GameState::Tick() {
     std::swap(inState, outState);
 };
 
-void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn) {
+struct Element {
+    ElementName type;
+    int speed;
+    int mass;
+};
+
+std::unordered_map<ElementName, Element> elems {};
+                                            
+void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, ElementName elemToSpawn) {
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};
     for (int x = scaledPos.x - 1; x <= scaledPos.x + 1; x++) {
         for (int y = scaledPos.y - 1; y <= scaledPos.y + 1; y++) {
@@ -41,23 +49,23 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
             }
             std::unique_ptr<Particle> newPtr;
             switch (elemToSpawn) {
-                case Element::WATER:
-                    newPtr = std::make_unique<Liquid>(x, y, 1, 10, Element::WATER); // Water
+                case ElementName::WATER:
+                    newPtr = std::make_unique<Liquid>(x, y, elems[elemToSpawn]); // Water
                     break;
-                case Element::CONCRETE:
-                    newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 100, Element::CONCRETE); // Concrete
+                case ElementName::CONCRETE:
+                    newPtr = std::make_unique<ImmobileSolid>(x, y, elems[elemToSpawn]); // Concrete
                     break;
-                case Element::STEAM:
-                    newPtr = std::make_unique<Gas>(x, y, 1, 5, Element::STEAM); // Steam
+                case ElementName::STEAM:
+                    newPtr = std::make_unique<Gas>(x, y, elems[elemToSpawn]); // Steam
                     break;
-                case Element::FIRE:
-                    newPtr = std::make_unique<Gas>(x, y, 2, 5, Element::FIRE); // Fire
+                case ElementName::FIRE:
+                    newPtr = std::make_unique<Gas>(x, y, elems[elemToSpawn]); // Fire
                     break;
-                case Element::SAND:
-                    newPtr = std::make_unique<MobileSolid>(x, y, 1, 20, Element::SAND); // Sand
+                case ElementName::SAND:
+                    newPtr = std::make_unique<MobileSolid>(x, y, elems[elemToSpawn]); // Sand
                     break;
                 default:
-                    newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 0, Element::NONE); // Eraser, essentially
+                    newPtr = std::make_unique<ImmobileSolid>(x, y, elems[ElementName::NONE]); // Eraser, essentially
             }
              
             (*inState)[x][y] = std::move(newPtr); // Move ownership from in state to out state, and then 
@@ -66,11 +74,11 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
     }
 }
 
-Element GameState::GetPixelElement(int x, int y) {
+ElementName GameState::GetPixelElementName(int x, int y) {
     // After Tick(), we swap the calculated outState to inState, so inState should always
     // be the one that we draw.
     if ((*inState)[x][y]) {
         return (*inState)[x][y]->GetElement();
     }
-    return Element::NONE;
+    return ElementName::NONE;
 }

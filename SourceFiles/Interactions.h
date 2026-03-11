@@ -6,7 +6,7 @@
 #include <memory>
 
 
-enum class Element {
+enum class ElementName {
     // enums representing each element, because I couldn't find a way to actully store
     // types in something.
     STEAM,

@@ -24,8 +24,8 @@ public:
         }
     };
 	void Tick();
-	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, Element elemToSpawn);
-    Element GetPixelElement(int x, int y);
+	void ApplyUserInteraction(Coord interactedPos, float scalingFactor, ElementName elemToSpawn);
+    ElementName GetPixelElementName(int x, int y);
 protected:
     std::shared_ptr<std::vector<std::vector<std::unique_ptr<Particle>>>> inState; // When move instate to outstate, first do that for every pixel.
     // But sometimes, you have a unique_ptr owning an object, and you wanna clear it so
