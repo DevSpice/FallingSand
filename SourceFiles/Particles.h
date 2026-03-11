@@ -33,14 +33,16 @@ struct Element {
 
 class Particle {
 public:
-	Particle(int x, int y, Element e) : pos(Coord{x, y}), speed(e.speed), mass(e.mass){};
+	Particle(int x, int y, Element e) : pos(Coord{x, y}), speed(e.speed), mass(e.mass), name(e.type){};
     virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState){return Coord{0,0};};
+    ElementName GetElement() {return name;};
     virtual ~Particle() = default;
 protected:
     Coord pos;
     int speed;
     int mass;
+    ElementName name;
 };
 
 // A lot of repeated code, just for them to only differ in Move. Is there a better way?
