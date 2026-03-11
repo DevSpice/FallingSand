@@ -76,11 +76,11 @@ ElementName DrawToolbar(int screenW, int screenH, ElementName current) {
             );
         }
 
-        // Color swatch (centered horizontally, upper portion)
+        // // Color swatch (centered horizontally, upper portion)
         int swatchX = btnX + (btnWidth  - BTN_SWATCH_SIZE) / 2;
         int swatchY = btnY + 6;
 
-        // Special "Erase" swatch: draw a small X instead of solid black
+        // // Special "Erase" swatch: draw a small X instead of solid black
         if (ELEMENTS[i].elem == ElementName::NONE) {
             DrawRectangle(swatchX, swatchY, BTN_SWATCH_SIZE, BTN_SWATCH_SIZE, { 50, 50, 58, 255 });
             // Draw cross
