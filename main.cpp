@@ -17,9 +17,7 @@ static const Color  BTN_SELECTED    = { 80, 80, 255, 255 };   // bright indigo h
 static const Color  TEXT_DIM        = { 140, 140, 155, 255 };
 static const Color  TEXT_BRIGHT     = { 230, 230, 240, 255 };
 
-// ─────────────────────────────────────────────
-//  Element metadata for the toolbar
-// ─────────────────────────────────────────────
+
 struct ElementInfo {
     Element   elem;
     const char* label;
