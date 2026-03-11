@@ -14,6 +14,11 @@ void GameState::Tick() {
         for(int x = Width-1; x >= 0; x--) { // Goes from Width-1 to 0, AKA left to right
             if((*inState)[x][y]) { // unique_ptr is true if it's managing an object, ad false otherwise
                 // nullptr is only for raw ptrs.
+
+                // If NONE material, we just want it to be empty when we get to outState
+                if ((*inState)[x][y]->GetElement() == Element::NONE) {
+                    continue;
+                }
                 
                 // If this space is blank in inState, we want it blank in outState,
                 // so that other particles can know that the space is free
@@ -44,6 +49,9 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
                     break;
                 case Element::STEAM:
                     newPtr = std::make_unique<Gas>(x, y, 1, 5, Element::STEAM); // Steam
+                    break;
+                case Element::FIRE:
+                    newPtr = std::make_unique<Gas>(x, y, 2, 5, Element::FIRE); // Steam
                     break;
                 default:
                     newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 0, Element::NONE); // Eraser, essentially
