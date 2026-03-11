@@ -49,7 +49,7 @@ protected:
 
 class Gas : public Particle {
 public:
-	Gas(int x, int y, int s, Element e) : Particle(x, y, e){};
+	Gas(int x, int y, Element e) : Particle(x, y, e){};
     Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) override;
 };
