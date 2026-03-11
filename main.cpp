@@ -20,8 +20,7 @@ static const Color  TEXT_BRIGHT     = { 230, 230, 240, 255 };
 
 unordered_map<ElementName, Color> colorsDict = {{ElementName::WATER, Color(BLUE)}, {ElementName::CONCRETE, Color(GRAY)},
                                             {ElementName::STEAM, Color(LIGHTGRAY)}, {ElementName::FIRE, Color(ORANGE)},
-                                            {ElementName::SAND, Color(BEIGE)}, {ElementName::NONE, Color(BLACK)},
-                                            {ElementName::ERASE, Color(BLACK)}
+                                            {ElementName::SAND, Color(BEIGE)}, {ElementName::ERASE, Color(BLACK)}
                                         };
 
 struct ElementInfo {
@@ -83,7 +82,7 @@ ElementName DrawToolbar(int screenW, int screenH, ElementName current) {
         int swatchY = btnY + 6;
 
         // // Special "Erase" swatch: draw a small X instead of solid black
-        if (ELEMENTS[i].elem == ElementName::NONE) {
+        if (ELEMENTS[i].elem == ElementName::ERASE) {
             DrawRectangle(swatchX, swatchY, BTN_SWATCH_SIZE, BTN_SWATCH_SIZE, { 50, 50, 58, 255 });
             // Draw cross
             DrawLine(swatchX + 3, swatchY + 3,
@@ -152,7 +151,7 @@ int main () {
 
         // Calculate which element they are placing.
         if (IsKeyPressed(KEY_ONE)) {
-            userElement = ElementName::NONE;
+            userElement = ElementName::ERASE;
         }
         else if (IsKeyPressed(KEY_TWO)) {
             userElement = ElementName::CONCRETE;

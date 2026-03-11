@@ -15,8 +15,9 @@ void GameState::Tick() {
             if((*inState)[x][y]) { // unique_ptr is true if it's managing an object, ad false otherwise
                 // nullptr is only for raw ptrs.
 
-                // If NONE material, we just want it to be empty when we get to outState
-                if ((*inState)[x][y]->GetElement() == ElementName::NONE) {
+                // If ERASE material, we just want it to be empty when we get to outState
+                if ((*inState)[x][y]->GetElement() == ElementName::ERASE) {
+                    (*inState)[x][y].reset();
                     continue;
                 }
                 
@@ -70,7 +71,7 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
                 case ElementName::ERASE:
                     newPtr = std::make_unique<MobileSolid>(x, y, elems[elemToSpawn]);
                 default:
-                    newPtr = std::make_unique<ImmobileSolid>(x, y, elems[ElementName::NONE]); // Eraser, essentially
+                    newPtr = std::make_unique<ImmobileSolid>(x, y, elems[ElementName::ERASE]); // Eraser, essentially
             }
              
             (*inState)[x][y] = std::move(newPtr); // Move ownership from in state to out state, and then 
@@ -85,5 +86,5 @@ ElementName GameState::GetPixelElementName(int x, int y) {
     if ((*inState)[x][y]) {
         return (*inState)[x][y]->GetElement();
     }
-    return ElementName::NONE;
+    return ElementName::ERASE;
 }
