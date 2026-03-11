@@ -7,23 +7,20 @@ using namespace fallingsandgame;
 void GameState::Tick() {
     for(int x = Width-1; x >= 0; x--) { // Goes from Width-1 to 0, AKA left to right
         for(int y = Height-1; y >= 0; y--) { // Goes from Height-1 to 0, AKA bottom to top
+            (*outState)[x][y].reset();
+        }
+    }
+    for(int y = Height-1; y >= 0; y--) { // Goes from Height-1 to 0, AKA bottom to top
+        for(int x = Width-1; x >= 0; x--) { // Goes from Width-1 to 0, AKA left to right
             if((*inState)[x][y]) { // unique_ptr is true if it's managing an object, ad false otherwise
                 // nullptr is only for raw ptrs.
                 
                 // If this space is blank in inState, we want it blank in outState,
                 // so that other particles can know that the space is free
-                auto newPos = (*inState)[x][y]->Move(*inState);
-                if (!VerifyIndexHelper(newPos.x, newPos.y)) {
-                    (*inState)[x][y].reset();
-                    (*outState)[x][y].reset();
-                }
-                else {
+                auto newPos = (*inState)[x][y]->Move(*outState);
+                if (VerifyIndexHelper(newPos.x, newPos.y)) {
                     (*outState)[newPos.x][newPos.y] = std::move((*inState)[x][y]);
                 }
-            }
-            else {
-                (*inState)[x][y].reset();
-                (*outState)[x][y].reset();
             }
         }
     }
