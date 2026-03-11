@@ -32,7 +32,13 @@ void GameState::Tick() {
     std::swap(inState, outState);
 };
 
-std::unordered_map<ElementName, Element> elems {};
+std::unordered_map<ElementName, Element> elems {
+    {ElementName::WATER, Element{ElementName::WATER, 1, 1}},
+    {ElementName::CONCRETE, Element{ElementName::CONCRETE, 1, 1}},
+    {ElementName::STEAM, Element{ElementName::STEAM, 1, 1}},
+    {ElementName::FIRE, Element{ElementName::FIRE, 1, 1}},
+    {ElementName::SAND, Element{ElementName::SAND, 1, 1}}
+};
                                             
 void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, ElementName elemToSpawn) {
     auto scaledPos = Coord{int(interactedPos.x*scalingFactor), int(interactedPos.y*scalingFactor)};
