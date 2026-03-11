@@ -16,14 +16,14 @@ bool checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Par
 }
 
 Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState, Coord startingPos, int speed, int direction) {
+    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState, Coord startingPos, int speed, int direction, bool fluid) {
     // A function which calculates the best move for this particle, given
     // its speed, direction (1 : up, -1 : down), and coordinate/state information.
     auto newX = startingPos.x;
     auto newY = startingPos.y;
     while (speed >= 1)
     {
-        int leftOrRight = distrib(rng) % 2 == 1 ? -1 : 1;
+        int leftOrRight = distrib(rng) % 2 == 1 ? -1 : 1; // -1 or +1, to add to x-coordinate to move left or right at random.
         // Check if can move straight up/down.
         if (!VerifyIndexHelper(newX, newY+direction) || checkStates(newX, newY+direction, inState, outState)) {
             newY = newY+direction;
@@ -37,12 +37,14 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
             newX = newX+leftOrRight;
             newY = newY+direction;
         }
-        // Check if can move to the left or right.
-        else if (!VerifyIndexHelper(newX-leftOrRight, newY) || checkStates(newX-leftOrRight, newY, inState, outState)) {
-            newX = newX-leftOrRight;
-        }
-        else if (!VerifyIndexHelper(newX+leftOrRight, newY) || checkStates(newX+leftOrRight, newY, inState, outState)) {
-            newX = newX+leftOrRight;
+        else if (fluid) {
+            // Check if can move to the left or right.
+            if (!VerifyIndexHelper(newX-leftOrRight, newY) || checkStates(newX-leftOrRight, newY, inState, outState)) {
+                newX = newX-leftOrRight;
+            }
+            else if (!VerifyIndexHelper(newX+leftOrRight, newY) || checkStates(newX+leftOrRight, newY, inState, outState)) {
+                newX = newX+leftOrRight;
+            }
         }
         // Otherwise, is trapped, so stay still and exit movement loop.
         else {
@@ -55,19 +57,19 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
 
 Coord Gas::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
-    pos = moveHelper(inState, outState, pos, speed, -1); // (0,0) is top left, so negative speed means going up.
+    pos = moveHelper(inState, outState, pos, speed, -1, true); // (0,0) is top left, so negative speed means going up.
     return pos;
 }
 
 Coord Liquid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
-    pos = moveHelper(inState, outState, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
+    pos = moveHelper(inState, outState, pos, speed, 1, true); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 
 Coord MobileSolid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
-    pos = moveHelper(inState, outState, pos, speed, 1); // (0,0) is top left, so positive speed means going down.
+    pos = moveHelper(inState, outState, pos, speed, 1, false); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 

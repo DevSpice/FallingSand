@@ -14,7 +14,7 @@ int main () {
     
     unordered_map<Element, Color> colorsDict = {{Element::WATER, Color(BLUE)}, {Element::CONCRETE, Color(GRAY)},
                                                 {Element::STEAM, Color(LIGHTGRAY)}, {Element::FIRE, Color(ORANGE)},
-                                                {Element::NONE, Color(BLACK)}};
+                                                {Element::SAND, Color(BEIGE)}, {Element::NONE, Color(BLACK)}};
 
     GameState game{};
 
@@ -55,6 +55,9 @@ int main () {
         }
         else if (IsKeyPressed(KEY_FIVE)) {
             userElement = Element::FIRE;
+        }
+        else if (IsKeyPressed(KEY_SIX)) {
+            userElement = Element::SAND;
         }
 
         if (interacted) {

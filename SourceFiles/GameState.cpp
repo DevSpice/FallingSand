@@ -51,7 +51,10 @@ void GameState::ApplyUserInteraction(Coord interactedPos, float scalingFactor, E
                     newPtr = std::make_unique<Gas>(x, y, 1, 5, Element::STEAM); // Steam
                     break;
                 case Element::FIRE:
-                    newPtr = std::make_unique<Gas>(x, y, 2, 5, Element::FIRE); // Steam
+                    newPtr = std::make_unique<Gas>(x, y, 2, 5, Element::FIRE); // Fire
+                    break;
+                case Element::SAND:
+                    newPtr = std::make_unique<MobileSolid>(x, y, 1, 20, Element::SAND); // Sand
                     break;
                 default:
                     newPtr = std::make_unique<ImmobileSolid>(x, y, 0, 0, Element::NONE); // Eraser, essentially
