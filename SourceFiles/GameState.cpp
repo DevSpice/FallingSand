@@ -42,6 +42,20 @@ void GameState::TickParallel(int groupNum, int threads, int rNum) {
                 if ((*inState)[x][y]->GetElement() == Element::NONE) {
                     continue;
                 }
+
+                /*
+                Idea: Each thread takes a % of particles, calculates what their next pos would be. Then ahve a 
+                single thread go ahead and build the array of pixels from it.
+
+                Edges might have contested areas. That's why you don't want.
+
+                Have each thread have an array, and then when they're all done going, then can just accumulate those.
+                Each tread does array transofmrations for its own pixels. Now you'll have four arrays. Then you could, when
+                rendering a pixel, usually have a single UI thread, loop through each of those four arrays.
+
+                Each thread gets a part of the screen it can process, they get a shared inState, they each write to separate
+                outStates, then the pixel printer draws from those outStates.
+                */
                 
                 // If this space is blank in inState, we want it blank in outState,
                 // so that other particles can know that the space is free
