@@ -11,27 +11,39 @@ std::random_device rd;  // a seed source for the random number engine
 std::mt19937 rng(rd()); // mersenne_twister_engine seeded with rd()
 std::uniform_int_distribution<> distrib(1, 100);
 
-std::optional<Particle> checkStates(int x, int y,  std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+std::optional<std::tuple<int, Particle>> checkStates(int x, int y,  std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
      std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     // Make sure not occupied in inState or outState
     if (inState[x][y]){
-        return *inState[x][y];
+        return std::make_tuple(0, *inState[x][y]);
     } 
     if (outState[x][y]) {
-        return *outState[x][y];
+        return std::make_tuple(1, *outState[x][y]);
     }
     return {};
 }
 
-void TrySwap(Particle p1, Particle p2, std::vector<std::vector<std::unique_ptr<Particle>>>& inState) {
+void TrySwap(Particle p1, Particle p2, int num, std::vector<std::vector<std::unique_ptr<Particle>>>& inState, 
+    std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+
+    // std::cout << "got here" << std::endl;
+
+
     // Sand and Water Swap
     if (p1.GetElement() == ElementName::SAND && p2.GetElement() == ElementName::WATER) {
         Coord p1Pos = p1.GetPos();
         Coord p2Pos = p2.GetPos();
 
+        std::cout << "Tried to swap" << std::endl;
+
+        if (num == 0) {
+
+        }
+
         std::swap(inState[p2Pos.x][p2Pos.y], inState[p1Pos.x][p1Pos.y]);
     }
 }
+
 
 Coord moveHelper(std::vector<std::vector<std::unique_ptr<Particle>>>& inState, std::vector<std::vector<std::unique_ptr<Particle>>>& outState, Coord startingPos, int speed, int direction, bool fluid) {
     // A function which calculates the best move for this particle, given
@@ -59,10 +71,11 @@ Coord moveHelper(std::vector<std::vector<std::unique_ptr<Particle>>>& inState, s
                     break;
                 }
                 else if ((x != newX || y != newY)) {
-                    std::optional<Particle> p = checkStates(x, y, inState, outState);
+                    std::optional<std::tuple<int, Particle>> p = checkStates(x, y, inState, outState);
                     if (p.has_value()) {
-                        // std::cout <<  ElementName(p.value().GetElement()) << std::endl;
-                        TrySwap(currP, p.value(), inState);
+                        // std::cout <<  "Is particle" << std::endl;
+                        auto [num, part] = p.value();
+                        TrySwap(currP, part, num, inState, outState);
 
                     }
                     else {

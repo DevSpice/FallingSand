@@ -30,7 +30,6 @@ struct Element {
     int mass;
 };
 
-
 class Particle {
 public:
 	Particle(int x, int y, Element e) : pos(Coord{x, y}), speed(e.speed), mass(e.mass), name(e.type){};
