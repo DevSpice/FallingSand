@@ -11,26 +11,29 @@ std::random_device rd;  // a seed source for the random number engine
 std::mt19937 rng(rd()); // mersenne_twister_engine seeded with rd()
 std::uniform_int_distribution<> distrib(1, 100);
 
-std::optional<Particle> checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+std::optional<Particle> checkStates(int x, int y,  std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     // Make sure not occupied in inState or outState
     if (inState[x][y]){
         return *inState[x][y];
-    } if (outState[x][y]) {
+    } 
+    if (outState[x][y]) {
         return *outState[x][y];
     }
     return {};
 }
 
-void TrySwap(Particle p1, Particle p2, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState) {
+void TrySwap(Particle p1, Particle p2, std::vector<std::vector<std::unique_ptr<Particle>>>& inState) {
     // Sand and Water Swap
     if (p1.GetElement() == ElementName::SAND && p2.GetElement() == ElementName::WATER) {
-        Coord tmpCoords = p2.GetPos();
+        Coord p1Pos = p1.GetPos();
+        Coord p2Pos = p2.GetPos();
+
+        std::swap(inState[p2Pos.x][p2Pos.y], inState[p1Pos.x][p1Pos.y]);
     }
 }
 
-Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState, Coord startingPos, int speed, int direction, bool fluid) {
+Coord moveHelper(std::vector<std::vector<std::unique_ptr<Particle>>>& inState, std::vector<std::vector<std::unique_ptr<Particle>>>& outState, Coord startingPos, int speed, int direction, bool fluid) {
     // A function which calculates the best move for this particle, given
     // its speed, direction (1 : up, -1 : down), and coordinate/state information.
     auto newX = startingPos.x;
@@ -58,8 +61,8 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
                 else if ((x != newX || y != newY)) {
                     std::optional<Particle> p = checkStates(x, y, inState, outState);
                     if (p.has_value()) {
-                        // std::cout << "Tried to swap" << std::endl;
-                        TrySwap(currP, p.value());
+                        // std::cout <<  ElementName(p.value().GetElement()) << std::endl;
+                        TrySwap(currP, p.value(), inState);
 
                     }
                     else {
@@ -86,26 +89,26 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
     return Coord{newX, newY};
 }
 
-Coord Gas::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+Coord Gas::Move( std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     pos = moveHelper(inState, outState, pos, speed, -1, true); // (0,0) is top left, so negative speed means going up.
     return pos;
 }
 
-Coord Liquid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+Coord Liquid::Move( std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     pos = moveHelper(inState, outState, pos, speed, 1, true); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 
-Coord MobileSolid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+Coord MobileSolid::Move( std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     pos = moveHelper(inState, outState, pos, speed, 1, false); // (0,0) is top left, so positive speed means going down.
     return pos;
 }
 
-Coord ImmobileSolid::Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
-    const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
+Coord ImmobileSolid::Move( std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     // It should not move at all, so just return its current position.
     return pos;
 }
