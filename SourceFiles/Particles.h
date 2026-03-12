@@ -37,7 +37,9 @@ public:
     virtual Coord Move(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState){return Coord{0,0};};
     ElementName GetElement() {return name;};
+    Coord GetPos() {return pos;};
     virtual ~Particle() = default;
+    void SetCoords(Coord coords) {pos = coords;};
 protected:
     Coord pos;
     int speed;

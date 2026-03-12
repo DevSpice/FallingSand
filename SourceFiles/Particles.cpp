@@ -1,6 +1,8 @@
 #include "Particles.h"
 #include <unordered_map>
 #include <random>
+#include <iostream>
+#include <optional>
 
 using namespace fallingsandgame;
 
@@ -9,10 +11,22 @@ std::random_device rd;  // a seed source for the random number engine
 std::mt19937 rng(rd()); // mersenne_twister_engine seeded with rd()
 std::uniform_int_distribution<> distrib(1, 100);
 
-bool checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
+std::optional<Particle> checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     // Make sure not occupied in inState or outState
-    return !inState[x][y] && !outState[x][y];
+    if (inState[x][y] || outState[x][y]) {
+        return *inState[x][y];
+    }
+    return {};
+}
+
+void TrySwap(Particle p1, Particle p2) {
+    // Sand and Water Swap
+    if (p1.GetElement() == ElementName::SAND && p2.GetElement() == ElementName::WATER) {
+        Coord tmpCoords = p2.GetPos();
+        p2.SetCoords(p1.GetPos());
+        p1.SetCoords(tmpCoords);
+    }
 }
 
 Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
@@ -31,14 +45,32 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
         if (fluid) {
             possYs.push_back(newY);
         }
-        for (auto x : possXs) { // Check in order: Stay at same x, Move Left/Right, and Move (-) Left/Right
-            for (auto y : possYs) // Check in order: Move Up/Down, and (if fluid) Stay at same y
+        Particle currP = *inState[newX][newY];
+
+        for (auto y : possYs) // Check in order: Move Up/Down, and (if fluid) Stay at same y
+            for (auto x : possXs) { // Check in order: Stay at same x, Move Left/Right, and Move (-) Left/Right
             {
-                if ((x != newX || y != newY) && (!VerifyIndexHelper(x, y) || checkStates(x, y, inState, outState))) {
+                if (!VerifyIndexHelper(x, y)) {
                     currX = x;
                     currY = y;
                     break;
                 }
+                else if ((x != newX || y != newY)) {
+                    std::optional<Particle> p = checkStates(x, y, inState, outState);
+                    if (p.has_value()) {
+                        std::cout << "Tried to swap" << std::endl;
+                        TrySwap(currP, p.value());
+
+                    }
+                    else {
+                            
+                        std::cout << "Nada" << std::endl;
+                        currX = x;
+                        currY = y;
+                        break;
+
+                    }
+                } 
             }
             if (currX != newX || currY != newY) { // If we've gotten a successful move, we can break this current loop
                 break;
