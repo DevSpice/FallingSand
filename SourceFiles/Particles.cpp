@@ -14,18 +14,18 @@ std::uniform_int_distribution<> distrib(1, 100);
 std::optional<Particle> checkStates(int x, int y, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState,
     const std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
     // Make sure not occupied in inState or outState
-    if (inState[x][y] || outState[x][y]) {
+    if (inState[x][y]){
         return *inState[x][y];
+    } if (outState[x][y]) {
+        return *outState[x][y];
     }
     return {};
 }
 
-void TrySwap(Particle p1, Particle p2) {
+void TrySwap(Particle p1, Particle p2, const std::vector<std::vector<std::unique_ptr<Particle>>>& inState) {
     // Sand and Water Swap
     if (p1.GetElement() == ElementName::SAND && p2.GetElement() == ElementName::WATER) {
         Coord tmpCoords = p2.GetPos();
-        p2.SetCoords(p1.GetPos());
-        p1.SetCoords(tmpCoords);
     }
 }
 
@@ -58,13 +58,13 @@ Coord moveHelper(const std::vector<std::vector<std::unique_ptr<Particle>>>& inSt
                 else if ((x != newX || y != newY)) {
                     std::optional<Particle> p = checkStates(x, y, inState, outState);
                     if (p.has_value()) {
-                        std::cout << "Tried to swap" << std::endl;
+                        // std::cout << "Tried to swap" << std::endl;
                         TrySwap(currP, p.value());
 
                     }
                     else {
                             
-                        std::cout << "Nada" << std::endl;
+                        // std::cout << "Nada" << std::endl;
                         currX = x;
                         currY = y;
                         break;
