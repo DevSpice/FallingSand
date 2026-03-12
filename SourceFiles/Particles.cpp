@@ -23,7 +23,7 @@ std::optional<std::tuple<int, Particle>> checkStates(int x, int y,  std::vector<
     return {};
 }
 
-void TrySwap(Particle p1, Particle p2, int num, std::vector<std::vector<std::unique_ptr<Particle>>>& inState, 
+bool TrySwap(Particle p1, Particle p2, int num, std::vector<std::vector<std::unique_ptr<Particle>>>& inState, 
     std::vector<std::vector<std::unique_ptr<Particle>>>& outState) {
 
     // std::cout << "got here" << std::endl;
@@ -36,12 +36,24 @@ void TrySwap(Particle p1, Particle p2, int num, std::vector<std::vector<std::uni
 
         std::cout << "Tried to swap" << std::endl;
 
-        if (num == 0) {
+        if (num == 0) { // The desired swap particle is currently in the inState
 
+            std::cout << "inState, skip" << std::endl;
+
+        } else {
+            std::cout << "outState" << std::endl;
+            
+            // auto tmp = std::move(outState[p2Pos.x][p2Pos.y]);
+            outState[p1Pos.x][p1Pos.y] = std::move(inState[p2Pos.x][p2Pos.y]);
+            // outState[p1Pos.x][p1Pos.y] = std::move(tmp);
+            
+            std::cout << "outState" << std::endl;
+            return true;
+           
         }
 
-        std::swap(inState[p2Pos.x][p2Pos.y], inState[p1Pos.x][p1Pos.y]);
     }
+    return false;
 }
 
 
@@ -75,7 +87,10 @@ Coord moveHelper(std::vector<std::vector<std::unique_ptr<Particle>>>& inState, s
                     if (p.has_value()) {
                         // std::cout <<  "Is particle" << std::endl;
                         auto [num, part] = p.value();
-                        TrySwap(currP, part, num, inState, outState);
+                        if (TrySwap(currP, part, num, inState, outState)) {
+                            Coord ret = part.GetPos();
+                            return ret;
+                        };
 
                     }
                     else {
